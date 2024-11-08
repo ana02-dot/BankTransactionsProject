@@ -15,6 +15,7 @@ namespace ConsoleApp1
 
         public string Password{  get; protected set; }
 
+        public double MinBalance { get; protected set; }
         public Account(string accNumb, double balance, int pin, string username, string password)
         {
             AccNumb = accNumb;

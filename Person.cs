@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -17,46 +18,56 @@ namespace ConsoleApp1
         public double SecondAccBalance { get; private set; }
 
         List<string> accounts = new List<string>();
-        List<string> transactions = new List<string>();
+        List<Transaction> transactions = new List<Transaction>();
 
+        public Person(string accNumb, double balance, int pin, string username, string password) : base(accNumb, balance, pin, username, password)
+        { }
         public override void GetTransactions()
         {
             Console.WriteLine("Transaction History:");
-            int count = 1;
+            if (transactions.Count == 0) {
+                Console.WriteLine("No transactions found");
+                return;
+            }
             foreach (var transaction in this.transactions)
             {
-                Console.WriteLine($"Transaction {count++}: {transaction}");
+                Console.WriteLine(transaction);
             }
 
 
         }
 
-        public void FilterTransactions()
+        public void FilterTransactionsByAmount(double minAmount)
         {
 
-            List<string> filteredTransactionsByBalance = transactions.Where(x => Balance < 45).ToList();
-            foreach (var transaction in filteredTransactionsByBalance)
+            var filteredTransactions = transactions.Where(x => x.Amount >= minAmount).ToList();
+
+            Console.WriteLine($"Filtered Transactions (Amount >= {minAmount}):");
+            if (filteredTransactions.Count == 0)
+            {
+                Console.WriteLine("No transactions found.");
+                return;
+            }
+
+            foreach (var transaction in filteredTransactions)
             {
                 {
                     Console.WriteLine(transaction);
 
                 }
 
-
-
             }
         }
 
-        public Person(string accNumb, double balance, int pin, string username, string password) : base(accNumb, balance, pin, username, password)
-        { }
+        
 
-        public override void Deposit(double balance)
+        public override void Deposit(double amount)
         {
 
-            if (balance > 0)
+            if (amount > 0)
             {
-                Balance += balance;
-                transactions.Add($"Deposited {balance}\nNew Balance {Balance}");
+                Balance += amount;
+                transactions.Add(new Transaction(DateTime.Now, amount, "Deposit", "Deposited to account"));
                 Console.WriteLine("Successfully deposited");
             }
             else
@@ -66,17 +77,17 @@ namespace ConsoleApp1
 
         }
 
-        public override void Withdraw(double balance)
+        public override void Withdraw(double amount)
         {
-            if (Balance >= balance && balance > 0)
+            if (Balance >= amount && amount > 0)
             {
-                Balance -= balance;
-                transactions.Add($"Withdrew {balance}\nNew Balance {Balance}");
+                Balance -= amount;
+                transactions.Add(new Transaction(DateTime.Now, amount, "Withdraw", "Withdrew from account"));
                 Console.WriteLine("Successfully withdrew");
             }
             else
             {
-                Console.WriteLine("Invalid amount");
+                Console.WriteLine("Invalid amount, it must be positive");
             }
         }
 
@@ -86,7 +97,7 @@ namespace ConsoleApp1
             {
                 Balance -= amount;
                 SecondAccBalance += amount;
-                transactions.Add($"Transferred {amount} to {secondAcc}\nNew Balance {Balance}");
+                transactions.Add(new Transaction(DateTime.Now, amount, "Transfer", $"Transferred to {secondAcc}"));
                 Console.WriteLine("Successfully transferred");
 
             }
@@ -102,7 +113,8 @@ namespace ConsoleApp1
         {
             double saprocento = (amount * yarly / 100) / period;
 
-            Balance = (Balance + saprocento);
+            Balance += saprocento;
+            Console.WriteLine($"new Balance is {Balance}");
 
         }
 
@@ -123,7 +135,8 @@ namespace ConsoleApp1
 
         public override bool MinReqBalance(string inputAccnumb)
         {
-            if (Balance > 0 && AccNumb == inputAccnumb)
+            MinBalance = 0.01;
+            if (Balance >= MinBalance  && AccNumb == inputAccnumb)
                 return true;
 
             return false;
