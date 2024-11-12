@@ -9,21 +9,19 @@ namespace ConsoleApp1
     public class Transaction
     {
         public DateTime Date { get; }
-        public double Amount { get; }
+        public decimal Amount { get; }
         public string Type { get; }
-        public string Description { get; }
 
-        public Transaction(DateTime date, double amount, string type, string description)
+        public Transaction(DateTime date, decimal amount, string type)
         {
             Date = date;
             Amount = amount;
             Type = type;
-            Description = description;
         }
 
         public override string ToString()
         {
-            return $"{Date:yyyy-MM-dd HH:mm:ss} - {Type}: {Amount} - {Description}";
+            return $"{Date:yyyy-MM-dd HH:mm:ss} - {Type}: {Amount}";
         }
     }
 }

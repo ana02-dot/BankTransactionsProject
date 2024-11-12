@@ -15,12 +15,12 @@ namespace ConsoleApp1
     class Person : Account
     {
         public string SecondAcc { get; set; }
-        public double SecondAccBalance { get; private set; }
+        public decimal SecondAccBalance { get; private set; }
 
         List<string> accounts = new List<string>();
         List<Transaction> transactions = new List<Transaction>();
 
-        public Person(string accNumb, double balance, int pin, string username, string password) : base(accNumb, balance, pin, username, password)
+        public Person(string accNumb, decimal balance, int pin, string username, string password) : base(accNumb, balance, pin, username, password)
         { }
         public override void GetTransactions()
         {
@@ -37,12 +37,12 @@ namespace ConsoleApp1
 
         }
 
-        public void FilterTransactionsByAmount(double minAmount)
+        public void FilterTransactionsByAmount(decimal minAmount)
         {
 
             var filteredTransactions = transactions.Where(x => x.Amount >= minAmount).ToList();
 
-            Console.WriteLine($"Filtered Transactions (Amount >= {minAmount}):");
+            Console.WriteLine($"Filtered Transactions (Amount is greater than {minAmount}):");
             if (filteredTransactions.Count == 0)
             {
                 Console.WriteLine("No transactions found.");
@@ -61,13 +61,13 @@ namespace ConsoleApp1
 
         
 
-        public override void Deposit(double amount)
+        public override void Deposit(decimal amount)
         {
 
             if (amount > 0)
             {
                 Balance += amount;
-                transactions.Add(new Transaction(DateTime.Now, amount, "Deposit", "Deposited to account"));
+                transactions.Add(new Transaction(DateTime.Now, amount, "Deposit"));
                 Console.WriteLine("Successfully deposited");
             }
             else
@@ -77,27 +77,27 @@ namespace ConsoleApp1
 
         }
 
-        public override void Withdraw(double amount)
+        public override void Withdraw(decimal amount)
         {
             if (Balance >= amount && amount > 0)
             {
                 Balance -= amount;
-                transactions.Add(new Transaction(DateTime.Now, amount, "Withdraw", "Withdrew from account"));
+                transactions.Add(new Transaction(DateTime.Now, amount, "Withdraw"));
                 Console.WriteLine("Successfully withdrew");
             }
             else
             {
-                Console.WriteLine("Invalid amount, it must be positive");
+                Console.WriteLine("Invalid amount or amount of money  must be positive");
             }
         }
 
-        public override void TransferAccToAcc(string secondAcc, double amount)
+        public override void TransferAccToAcc(string secondAcc, decimal amount)
         {
             if (Balance >= amount && amount > 0)
             {
                 Balance -= amount;
                 SecondAccBalance += amount;
-                transactions.Add(new Transaction(DateTime.Now, amount, "Transfer", $"Transferred to {secondAcc}"));
+                transactions.Add(new Transaction(DateTime.Now, amount, "Transfer"));
                 Console.WriteLine("Successfully transferred");
 
             }
@@ -109,9 +109,9 @@ namespace ConsoleApp1
 
 
 
-        public void BalanceSapr(int period, double amount, int yarly)
+        public void BalanceSapr(int period, decimal amount, int yarly)
         {
-            double saprocento = (amount * yarly / 100) / period;
+            decimal saprocento = (amount * yarly / 100) / period;
 
             Balance += saprocento;
             Console.WriteLine($"new Balance is {Balance}");
@@ -136,7 +136,8 @@ namespace ConsoleApp1
         public override bool MinReqBalance(string inputAccnumb)
         {
             MinBalance = 0.01;
-            if (Balance >= MinBalance  && AccNumb == inputAccnumb)
+            decimal minBalance = Convert.ToDecimal(MinBalance);
+            if (Balance >= minBalance  && AccNumb == inputAccnumb)
                 return true;
 
             return false;
@@ -146,8 +147,6 @@ namespace ConsoleApp1
             string userInfo = $"ID: {ID}, Phone: {phoneNumb}, Name: {name}, Last name: {lastName}";
             accounts.Add(userInfo);
 
-            foreach (string s in accounts)
-                Console.WriteLine(s);
 
             Console.WriteLine("User registered successfully!");
 
@@ -166,23 +165,23 @@ namespace ConsoleApp1
             }
             else
             {
-                Console.WriteLine("password can not update");
+                Console.WriteLine("password can not been updated");
             }
 
         }
 
 
-        public override void GetDetailedAccounts()
+        public override void GetDetailedAccountsInfo()
         {
             List<string> detailedInfo = new List<string>();
             detailedInfo.Add(Balance.ToString());
             detailedInfo.Add(transactions.Count.ToString());
             detailedInfo.Add(Username);
             detailedInfo.Add(AccNumb);
-            foreach (var info in detailedInfo)
-            {
-                Console.WriteLine(info);
-            }
+
+            Console.WriteLine($"Balance: {detailedInfo[0]}\nNumber of Transactions: {detailedInfo[1]}" +
+                $"\nUsername: {detailedInfo[2]}\nAccount Number: {detailedInfo[3]}");
+           
 
         }
 
@@ -194,7 +193,6 @@ namespace ConsoleApp1
             }
             else
             {
-
                 string existUser = $"your account number is {newAccNumb}";
                 accounts.Add(newAccNumb);
 
@@ -220,7 +218,7 @@ namespace ConsoleApp1
                 { "GEL", 1 }
 
         };
-            if((!RateDict.ContainsKey(fromCurrency)) || !RateDict.ContainsKey(toCurrency))
+            if((!RateDict.ContainsKey(fromCurrency)) && !RateDict.ContainsKey(toCurrency))
             {
                 throw new ArgumentException("Invalid Currency");
             }
