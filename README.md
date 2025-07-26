@@ -2,7 +2,7 @@
 
 A C# console application that simulates the core logic of a **banking system**, allowing you to manage people, accounts, and transactions. It’s a great project to practice object-oriented programming, data modeling, and LINQ.
 
-## 📌 Key Features
+## Key Features
 
 - Create and manage **Person** objects with personal details
 - Manage **Account** objects with balance and account types
@@ -10,14 +10,14 @@ A C# console application that simulates the core logic of a **banking system**, 
 - Use LINQ to query, filter, and summarize data
 - Structured with clean, modular C# code
 
-## 🧱 Project Structure
+## Project Structure
 
 - `Person.cs` – Represents a customer with fields like `Id`, `Name`, `Email`
 - `Account.cs` – Represents a bank account with `Balance`, `AccountType`, and ownership via `PersonId`
 - `Transaction.cs` *(assumed)* – Represents a financial transaction
 - `Program.cs` – The entry point with logic for running and testing the banking logic
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 - C# (.NET 8 Console App)
 - Object-Oriented Programming
@@ -25,7 +25,7 @@ A C# console application that simulates the core logic of a **banking system**, 
 - Enum usage (`AccountType`)
 - Basic Data Validation
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -34,20 +34,8 @@ A C# console application that simulates the core logic of a **banking system**, 
 
 ### Running the App
 
-1. Clone the repo:
+Clone the repo:
 
    ```bash
    git clone https://github.com/ana02-dot/BankTransactionsProject.git
    cd BankTransactionsProject
-
-
-## 🔐 Sample Classes
-
-### Person.cs
-```csharp
-public class Person
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Email { get; set; }
-}
